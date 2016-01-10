@@ -1,5 +1,8 @@
-var myViewModel = {
+//View Model
+var AppViewModel = function () {
+
+  var self = this;
 
 };
 
-ko.applyBindings(myViewModel);
+ko.applyBindings(new AppViewModel());
