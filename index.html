@@ -11,8 +11,14 @@
     <script src="js/bootstrap.min.js"></script>
   </head>
   <body>
+    <div>
+      <p>Search Bar Placeholder</p>
+    </div>
+    <ul>
+      <li></li>
+    </ul>
     <div id="map"></div>
-    <script>
+  <!--  <script>
       var map;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -20,12 +26,13 @@
           zoom:14
         });
       }
-    </script>
+    </script>-->
   </body>
   <script src="js/knockout-3.4.0.js"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&"
+  async defer></script> <!--callback=initMap-->
   <script src="js/app.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&callback=initMap"
-  async defer></script>
 </html>
 
-<!-- google map loading reference: https://developers.google.com/maps/documentation/javascript/examples/map-simple 42.812453, -73.925205-->
+<!-- google map loading reference: https://developers.google.com/maps/documentation/javascript/examples/map-simple -->
