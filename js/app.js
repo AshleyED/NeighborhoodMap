@@ -46,10 +46,12 @@ var initialMarkers = [
 ];
 
 //View Model
+var map;
+
 var AppViewModel = function () {
   var self = this;
 
-  var map;
+
   var mapOptions = {
     zoom: 14,
     center: {lat: 42.812634, lng: -73.925237},
@@ -58,12 +60,22 @@ var AppViewModel = function () {
   var map = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
-  this.markerList = ko.observableArray([]);
-  initialMarkers.forEach(function(markerItem){
-    self.markerList.push(new markerLocation(markerItem));
-  });
-  this.currentMarker = ko.observable(this.markerList()[0]);
+  for (var i=0; i<initialMarkers.length; i++) {
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(initialMarkers[i].latitude, initialMarkers[i].longitude),
+      map: map,
+      title: initialMarkers[i].name
+    })
+  };
+
+  //this.markerList = ko.observableArray([]);
+  //initialMarkers.forEach(function(markerItem){
+  //  self.markerList.push(new markerLocation(markerItem));
+  //});
+  //this.currentMarker = ko.observable(this.markerList()[0]);
 
 };
 
 ko.applyBindings(new AppViewModel());
+
+//https://developers.google.com/maps/documentation/javascript/reference referenced for map code
