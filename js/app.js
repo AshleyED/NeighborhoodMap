@@ -47,25 +47,38 @@ var initialMarkers = [
 
 //View Model
 var map;
+var infoWindow;
 
 var AppViewModel = function () {
   var self = this;
 
+  //this.markerList = ko.observableArray([]);
 
   var mapOptions = {
     zoom: 14,
     center: {lat: 42.812634, lng: -73.925237},
   };
 
-  var map = new google.maps.Map(document.getElementById("map"),
+  self.googleMap = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
   for (var i=0; i<initialMarkers.length; i++) {
+    self.markerArray = [];
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(initialMarkers[i].latitude, initialMarkers[i].longitude),
-      map: map,
-      title: initialMarkers[i].name
+      map: self.googleMap,
+      title: initialMarkers[i].name,
+      clickable: true //
     })
+
+    self.infoWindow = new google.maps.InfoWindow({
+       content: initialMarkers[i].name
+    })
+
+    google.maps.event.addListener(initialMarkers[i], 'click', (function(infoWindows) {
+      console.log("clicked");
+      self.infoWindow.open(map, marker);
+    })(self.infoWindow));
   };
 
   //this.markerList = ko.observableArray([]);
