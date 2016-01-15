@@ -1,10 +1,4 @@
 //Model Data
-var markerLocation = function (data) {
-  this.name = ko.observable(data.name);
-  this.website = ko.observable(data.website);
-  this.latitude = ko.observable(data.latitude);
-  this.longitude = ko.observable(data.longitude);
-};
 
 var initialMarkers = [
   {
@@ -45,6 +39,13 @@ var initialMarkers = [
   }
 ];
 
+var Place = function (data) {
+  this.name = ko.observable(data.name);
+  this.website = ko.observable(data.website);
+  this.latitude = ko.observable(data.latitude);
+  this.longitude = ko.observable(data.longitude);
+};
+
 //View Model
 var map;
 var infoWindow;
@@ -62,8 +63,31 @@ var AppViewModel = function () {
   self.googleMap = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
+  self.infoWindow = new google.maps.InfoWindow({
+     content: initialMarkers.name
+  })
+
+/*  self.markerArray = ko.observableArray(initialMarkers);
+  initialMarkers.forEach(function(place){
+    self.markerArray.push(new Place(place));
+  });
+
+  self.markerArray.forEach(function(place){
+    var markerSettings = {
+      position: new google.maps.LatLng(initialMarkers.latitude, initialMarkers.longitude),
+      map: self.googleMap,
+      title: initialMarkers.name,
+      clickable: true //
+    }
+    Place.marker = new google.maps.Marker(markerSettings);
+  }) */
+
+
   for (var i=0; i<initialMarkers.length; i++) {
-    self.markerArray = [];
+    self.markerArray = ko.observableArray(initialMarkers);
+
+      //self.markerArray.push(new Place(Place));
+
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(initialMarkers[i].latitude, initialMarkers[i].longitude),
       map: self.googleMap,
@@ -75,11 +99,14 @@ var AppViewModel = function () {
        content: initialMarkers[i].name
     })
 
-    google.maps.event.addListener(initialMarkers[i], 'click', (function(infoWindows) {
+    google.maps.event.addListener(marker, 'click', (function() {
       console.log("clicked");
       self.infoWindow.open(map, marker);
-    })(self.infoWindow));
+    }));
+
   };
+
+  //self.markerArray.push(new Place(marker));
 
   //this.markerList = ko.observableArray([]);
   //initialMarkers.forEach(function(markerItem){
