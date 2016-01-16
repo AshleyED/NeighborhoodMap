@@ -53,20 +53,87 @@ var infoWindow;
 var AppViewModel = function () {
   var self = this;
 
-  //this.markerList = ko.observableArray([]);
+  this.markerList = ko.observableArray([]);
+  /*var schenectady = {lat: 42.812634, lng: -73.925237};
 
   var mapOptions = {
     zoom: 14,
     center: {lat: 42.812634, lng: -73.925237},
   };
 
-  self.googleMap = new google.maps.Map(document.getElementById("map"),
+  var map = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
-  self.infoWindow = new google.maps.InfoWindow({
-     content: initialMarkers.name
-  })
+  var contentString = '<div id="content">' + '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' + '</div';
 
+  var infoWindow = new google.maps.InfoWindow({
+     content: contentString
+  });
+
+  var marker = new google.maps.Marker({
+    position: schenectady,
+    map: map,
+    title: 'Schenectady',
+    //clickable: true //
+  });
+
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+  }); THIS CODE IN THIS SHADOW OUT WORKS FOR ONE MARKER*/
+
+  var mapOptions = {
+    zoom: 14,
+    center: {lat: 42.812634, lng: -73.925237},
+  };
+
+  var map = new google.maps.Map(document.getElementById("map"),
+      mapOptions);
+
+    /*function locationFinder() {
+      var locations = [];
+      locations.push(initialMarkers.name);
+
+      return locations;
+    }*/
+  self.markerArray = ko.observableArray(initialMarkers);
+
+  for (var i=0; i<initialMarkers.length; i++) {
+
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(initialMarkers[i].latitude, initialMarkers[i].longitude),
+      map: map,
+      title: initialMarkers[i].name,
+      //clickable: true //
+    });
+
+    var windowNames = initialMarkers[i].name
+
+    var contentString = '<div id="content">' + windowNames
+
+    google.maps.event.addListener(marker, 'click', function() {
+      console.log("clicked");
+      //infoWindow.setContent(this.html);
+      infoWindow.open(map, this);
+    });
+
+  };
+
+  //initialMarkers.forEach(function(markerItem){
+  //  self.markerList.push(new markerLocation(markerItem));
+  //});
+  //self.currentMarker = ko.observable(this.markerList()[0]);
+
+  var infoWindow = new google.maps.InfoWindow({
+     content: contentString
+  });
+
+  //for (var i=0; i<initialMarkers.length; i++) {
+  //var contentString = initialMarkers[i].name;//'<div id="content">' + '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' + '</div';
+
+////  var infoWindow = new google.maps.InfoWindow({
+  //   content: initialMarkers[i].name
+//  });
+//};
 /*  self.markerArray = ko.observableArray(initialMarkers);
   initialMarkers.forEach(function(place){
     self.markerArray.push(new Place(place));
@@ -80,11 +147,10 @@ var AppViewModel = function () {
       clickable: true //
     }
     Place.marker = new google.maps.Marker(markerSettings);
-  }) */
-
+  })
+    self.markerArray = ko.observableArray(initialMarkers);
 
   for (var i=0; i<initialMarkers.length; i++) {
-    self.markerArray = ko.observableArray(initialMarkers);
 
       //self.markerArray.push(new Place(Place));
 
@@ -104,7 +170,7 @@ var AppViewModel = function () {
       self.infoWindow.open(map, marker);
     }));
 
-  };
+  };*/
 
   //self.markerArray.push(new Place(marker));
 
@@ -119,3 +185,5 @@ var AppViewModel = function () {
 ko.applyBindings(new AppViewModel());
 
 //https://developers.google.com/maps/documentation/javascript/reference referenced for map code
+//https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple info window one
+//http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/ infowindow marker to this
