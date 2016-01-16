@@ -73,20 +73,19 @@ var AppViewModel = function () {
       map: map,
       title: initialMarkers.name
     });
+
+    placeItem.marker = marker;
+
+    var windowNames = initialMarkers.name
+
+    var contentString = '<div id="content">' + windowNames
+
+    google.maps.event.addListener(placeItem.marker, 'click', function() {
+      console.log("clicked");
+      infoWindow.setContent(contentString);
+      infoWindow.open(map, this);
+    });
   });
-
-  placeItem.marker = marker;
-
-  var windowNames = initialMarkers[i].name
-
-  var contentString = '<div id="content">' + windowNames
-
-  google.maps.event.addListener(placeItem.marker, 'click', function() {
-    console.log("clicked");
-    infoWindow.setContent(contentString);
-    infoWindow.open(map, this);
-  });
-
 
   /*for (var i=0; i<initialMarkers.length; i++) {
 
