@@ -44,60 +44,51 @@ var Place = function (data) {
   this.website = ko.observable(data.website);
   this.latitude = ko.observable(data.latitude);
   this.longitude = ko.observable(data.longitude);
+  this.marker = '';
 };
 
 //View Model
 var map;
 var infoWindow;
+var marker;
 
 var AppViewModel = function () {
   var self = this;
 
   this.markerList = ko.observableArray([]);
-  /*var schenectady = {lat: 42.812634, lng: -73.925237};
 
   var mapOptions = {
     zoom: 14,
     center: {lat: 42.812634, lng: -73.925237},
   };
 
-  var map = new google.maps.Map(document.getElementById("map"),
+  map = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
-  var contentString = '<div id="content">' + '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' + '</div';
-
-  var infoWindow = new google.maps.InfoWindow({
-     content: contentString
-  });
-
-  var marker = new google.maps.Marker({
-    position: schenectady,
-    map: map,
-    title: 'Schenectady',
-    //clickable: true //
-  });
-
-  marker.addListener('click', function() {
-    infoWindow.open(map, marker);
-  }); THIS CODE IN THIS SHADOW OUT WORKS FOR ONE MARKER*/
-
-  var mapOptions = {
-    zoom: 14,
-    center: {lat: 42.812634, lng: -73.925237},
-  };
-
-  var map = new google.maps.Map(document.getElementById("map"),
-      mapOptions);
-
-    /*function locationFinder() {
-      var locations = [];
-      locations.push(initialMarkers.name);
-
-      return locations;
-    }*/
   self.markerArray = ko.observableArray(initialMarkers);
 
-  for (var i=0; i<initialMarkers.length; i++) {
+  self.markerArray().forEach(function(placeItem) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(initialMarkers.latitude, initialMarkers.longitude),
+      map: map,
+      title: initialMarkers.name
+    });
+  });
+
+  placeItem.marker = marker;
+
+  var windowNames = initialMarkers[i].name
+
+  var contentString = '<div id="content">' + windowNames
+
+  google.maps.event.addListener(placeItem.marker, 'click', function() {
+    console.log("clicked");
+    infoWindow.setContent(contentString);
+    infoWindow.open(map, this);
+  });
+
+
+  /*for (var i=0; i<initialMarkers.length; i++) {
 
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(initialMarkers[i].latitude, initialMarkers[i].longitude),
@@ -110,22 +101,22 @@ var AppViewModel = function () {
 
     var contentString = '<div id="content">' + windowNames
 
-    google.maps.event.addListener(marker, 'click', function() {
+    google.maps.event.addListener(marker, 'click', (function(infoWindow) {
       console.log("clicked");
       //infoWindow.setContent(this.html);
       infoWindow.open(map, this);
-    });
+    })(infoWindow));
 
-  };
+  }; */
 
   //initialMarkers.forEach(function(markerItem){
   //  self.markerList.push(new markerLocation(markerItem));
   //});
   //self.currentMarker = ko.observable(this.markerList()[0]);
 
-  var infoWindow = new google.maps.InfoWindow({
-     content: contentString
-  });
+  ////var infoWindow = new google.maps.InfoWindow({
+  //   content: contentString
+//  });
 
   //for (var i=0; i<initialMarkers.length; i++) {
   //var contentString = initialMarkers[i].name;//'<div id="content">' + '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' + '</div';
@@ -172,6 +163,33 @@ var AppViewModel = function () {
 
   };*/
 
+  /*var schenectady = {lat: 42.812634, lng: -73.925237};
+
+  var mapOptions = {
+    zoom: 14,
+    center: {lat: 42.812634, lng: -73.925237},
+  };
+
+  var map = new google.maps.Map(document.getElementById("map"),
+      mapOptions);
+
+  var contentString = '<div id="content">' + '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' + '</div';
+
+  var infoWindow = new google.maps.InfoWindow({
+     content: contentString
+  });
+
+  var marker = new google.maps.Marker({
+    position: schenectady,
+    map: map,
+    title: 'Schenectady',
+    //clickable: true //
+  });
+
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+  }); THIS CODE IN THIS SHADOW OUT WORKS FOR ONE MARKER*/
+
   //self.markerArray.push(new Place(marker));
 
   //this.markerList = ko.observableArray([]);
@@ -180,6 +198,12 @@ var AppViewModel = function () {
   //});
   //this.currentMarker = ko.observable(this.markerList()[0]);
 
+      /*function locationFinder() {
+        var locations = [];
+        locations.push(initialMarkers.name);
+
+        return locations;
+      }*/
 };
 
 ko.applyBindings(new AppViewModel());
