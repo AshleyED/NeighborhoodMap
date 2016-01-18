@@ -87,12 +87,26 @@ var AppViewModel = function () {
       infoWindow.setContent(contentString);
       infoWindow.open(map, this);
     });
+
+///////////////////////////////////////////////////////////////////////
+    self.initialMarkers= ko.observableArray(initialMarkers);
+    self.query= ko.observable('');
+
+    self.filteredPlaces = ko.computed(function() {
+      var filter = self.query().toLowerCase();
+      if (!filter) {
+          return self.query();
+      } else {
+          return ko.utils.arrayFilter(self.query(), function(query) {
+              return ko.utils.stringStartsWith(placeItem.name().toLowerCase(), filter);
+          });
+      }
+    }, self);
   });
 ///////////////////////////////////////////////////////////////////
-  self.initialMarkers= ko.observableArray(initialMarkers);
-  self.query= ko.observable('');
 
-  var search= function(value) {
+
+/*  var search= function(value) {
     self.initialMarkers.removeAll();
 
     for(var x in initialMarkers) {
@@ -102,7 +116,7 @@ var AppViewModel = function () {
     }
   };
 
-  self.query.subscribe(initialMarkers.search);
+  self.query.subscribe(initialMarkers.search);*/
 
 
 /////////////////////////////////////////////////////////////////
@@ -115,3 +129,4 @@ ko.applyBindings(new AppViewModel());
 //https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple info window one
 //http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/ infowindow marker to this
 //http://opensoul.org/2011/06/23/live-search-with-knockoutjs/ list and filter list
+//http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html filter list
