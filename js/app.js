@@ -88,6 +88,25 @@ var AppViewModel = function () {
       infoWindow.open(map, this);
     });
   });
+///////////////////////////////////////////////////////////////////
+  self.initialMarkers= ko.observableArray(initialMarkers);
+  self.query= ko.observable('');
+
+  var search= function(value) {
+    self.initialMarkers.removeAll();
+
+    for(var x in initialMarkers) {
+      if(initialMarkers[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        self.initialMarkers.push(initialMarkers[x]);
+      }
+    }
+  };
+
+  self.query.subscribe(initialMarkers.search);
+
+
+/////////////////////////////////////////////////////////////////
+
 };
 
 ko.applyBindings(new AppViewModel());
@@ -95,3 +114,4 @@ ko.applyBindings(new AppViewModel());
 //https://developers.google.com/maps/documentation/javascript/reference referenced for map code
 //https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple info window one
 //http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/ infowindow marker to this
+//http://opensoul.org/2011/06/23/live-search-with-knockoutjs/ list and filter list
