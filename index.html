@@ -14,10 +14,10 @@
     <div>
         <input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
     </div>
-    <ul id="list-view" data-bind="template: {initialMarkers:'name', foreach:initialMarkers}">
+    <ul id="list-view" data-bind="template: {initialMarkers:'name', foreach:initialMarkers}, value: self.filteredPlaces">
 
         <li>
-          <strong data-bind="text:name"></strong>
+          <strong data-bind="text:name, value: self.filteredPlaces"></strong>
         </li>
 
     </ul>

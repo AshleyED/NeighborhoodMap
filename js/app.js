@@ -87,22 +87,29 @@ var AppViewModel = function () {
       infoWindow.setContent(contentString);
       infoWindow.open(map, this);
     });
-
+  });
 ///////////////////////////////////////////////////////////////////////
     self.initialMarkers= ko.observableArray(initialMarkers);
+    self.placeItem = ko.observableArray('');
     self.query= ko.observable('');
 
     self.filteredPlaces = ko.computed(function() {
       var filter = self.query().toLowerCase();
       if (!filter) {
-          return self.query();
+        return self.query();
       } else {
-          return ko.utils.arrayFilter(self.query(), function(query) {
-              return ko.utils.stringStartsWith(placeItem.name().toLowerCase(), filter);
+          return ko.utils.arrayFilter(self.placeItem(), function(placeItem) {
+            var stringStartsWith = function (string, startsWith) {
+              string = string || "";
+              if (startsWith.length > string.length)
+                  return false;
+              return string.substring(0, startsWith.length) === startsWith;
+            };
+            return ko.utils.stringStartsWith(placeItem.name().toLowerCase(), filter);
           });
       }
     }, self);
-  });
+
 ///////////////////////////////////////////////////////////////////
 
 
@@ -130,3 +137,4 @@ ko.applyBindings(new AppViewModel());
 //http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/ infowindow marker to this
 //http://opensoul.org/2011/06/23/live-search-with-knockoutjs/ list and filter list
 //http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html filter list
+//http://stackoverflow.com/questions/28042344/filter-using-knockoutjs stringStartsWith
