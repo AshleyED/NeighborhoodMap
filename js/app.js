@@ -53,6 +53,13 @@ var infoWindow;
 var marker;
 
 var AppViewModel = function () {
+  var stringStartsWith = function (string, startsWith) {
+    string = string || "";
+    if (startsWith.length > string.length)
+        return false;
+    return string.substring(0, startsWith.length) === startsWith;
+  };
+
   var self = this;
 
   this.markerList = ko.observableArray([]);
@@ -96,16 +103,10 @@ var AppViewModel = function () {
     self.filteredPlaces = ko.computed(function() {
       var filter = self.query().toLowerCase();
       if (!filter) {
-        return self.query();
+        return self.placeItem();
       } else {
           return ko.utils.arrayFilter(self.placeItem(), function(placeItem) {
-            var stringStartsWith = function (string, startsWith) {
-              string = string || "";
-              if (startsWith.length > string.length)
-                  return false;
-              return string.substring(0, startsWith.length) === startsWith;
-            };
-            return ko.utils.stringStartsWith(placeItem.name().toLowerCase(), filter);
+            return stringStartsWith(placeItem.name().toLowerCase(), filter);
           });
       }
     }, self);
