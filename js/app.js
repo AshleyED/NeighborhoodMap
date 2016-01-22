@@ -106,7 +106,7 @@ var AppViewModel = function () {
         return self.initialMarkers();
       } else {
           return ko.utils.arrayFilter(self.initialMarkers(), function(placeItem) {
-            return stringStartsWith(placeItem.name, filter);
+            return stringStartsWith(placeItem.name.toLowerCase(), filter);
           });
       }
     }, self);
