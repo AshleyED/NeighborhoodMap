@@ -97,16 +97,16 @@ var AppViewModel = function () {
   });
 ///////////////////////////////////////////////////////////////////////
     self.initialMarkers= ko.observableArray(initialMarkers);
-    self.placeItem = ko.observableArray('');
+    //self.placeItem = ko.observableArray('');
     self.query= ko.observable('');
 
     self.filteredPlaces = ko.computed(function() {
       var filter = self.query().toLowerCase();
       if (!filter) {
-        return self.placeItem();
+        return self.initialMarkers();
       } else {
-          return ko.utils.arrayFilter(self.placeItem(), function(placeItem) {
-            return stringStartsWith(placeItem.name().toLowerCase(), filter);
+          return ko.utils.arrayFilter(self.initialMarkers(), function(placeItem) {
+            return stringStartsWith(placeItem.name, filter);
           });
       }
     }, self);
