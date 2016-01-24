@@ -11,7 +11,7 @@
     <script src="js/bootstrap.min.js"></script>
   </head>
   <body>
-    <div>
+    <div id = "filter">
         <input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
     </div>
     <ul id="list-view" data-bind="template: {initialMarkers:'name', foreach:filteredPlaces}, value: self.filteredPlaces">

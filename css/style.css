@@ -6,6 +6,15 @@ html, body {
 
 #map {
   height: 100%;
-  width: 80%;
-  float: right;
+  position: relative;
+  overflow: hidden;
+}
+
+#filter {
+  padding-top: 25px;
+
+}
+
+#list-view {
+
 }

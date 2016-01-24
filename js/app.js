@@ -3,6 +3,7 @@
 var initialMarkers = [
   {
     name: 'Union College',
+    address: '807 Union St, Schenectady, NY 12308',
     website: 'www.union.edu',
     latitude: 42.817765,
     longitude: -73.930548,
@@ -10,6 +11,7 @@ var initialMarkers = [
   },
   {
     name: '20N Broadway Tavern',
+    address: '20 Broadway Schenectady, NY 12305',
     website: 'No website',
     latitude: 42.815768,
     longitude: -73.941403,
@@ -17,6 +19,7 @@ var initialMarkers = [
   },
   {
     name: 'Proctors Theater',
+    address: '432 State St, Schenectady, NY 12305',
     website: 'www.proctors.org',
     latitude: 42.812557,
     longitude: -73.941850,
@@ -24,6 +27,7 @@ var initialMarkers = [
   },
   {
     name: 'Cornells Restaurant',
+    address: '39 N Jay St, Schenectady, NY 12305',
     website: 'www.cornellsrestaurant.com',
     latitude: 42.817836,
     longitude: -73.938326,
@@ -31,6 +35,7 @@ var initialMarkers = [
   },
   {
     name: 'Bow Tie Cinemas',
+    address: '400 State St, Schenectady, NY 12305',
     website: 'bowtiecinemas.com',
     latitude: 42.812920,
     longitude:  -73.942673,
@@ -38,6 +43,7 @@ var initialMarkers = [
   },
   {
     name: 'Amtrak Train Station',
+    address: '332 Erie Blvd, Schenectady, NY 12305',
     website: 'amtrak.com',
     latitude: 42.814612,
     longitude: -73.942893,
@@ -47,6 +53,7 @@ var initialMarkers = [
 
 var Place = function (data) {
   this.name = ko.observable(data.name);
+  this.address = ko.observable(data.address);
   this.website = ko.observable(data.website);
   this.latitude = ko.observable(data.latitude);
   this.longitude = ko.observable(data.longitude);
@@ -70,11 +77,17 @@ var AppViewModel = function () {
 
   var mapOptions = {
     zoom: 14,
-    center: {lat: 42.812634, lng: -73.925237},
+    center: {lat: 42.814113, lng: -73.939643}, 
   };
 
   map = new google.maps.Map(document.getElementById("map"),
       mapOptions);
+
+  google.maps.event.addDomListener(window, "resize", function() {
+			var center = map.getCenter();
+			google.maps.event.trigger(map, "resize");
+			map.setCenter(center);
+  });
 
   self.markerArray = ko.observableArray(initialMarkers);
 
@@ -90,10 +103,11 @@ var AppViewModel = function () {
     //marker = null;
 
     var windowNames = placeItem.name
+    var windowAddresses = placeItem.address
 
     infoWindow = new google.maps.InfoWindow();
 
-    var contentString = '<div id="content">' + windowNames
+    var contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '</div>'
 
     google.maps.event.addListener(placeItem.marker, 'click', function() {
       console.log("clicked");
@@ -137,3 +151,4 @@ ko.applyBindings(new AppViewModel());
 //http://opensoul.org/2011/06/23/live-search-with-knockoutjs/ list and filter list
 //http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html filter list
 //http://stackoverflow.com/questions/28042344/filter-using-knockoutjs stringStartsWith
+//http://codepen.io/hubpork/pen/xriIz resize map
