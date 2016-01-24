@@ -5,37 +5,43 @@ var initialMarkers = [
     name: 'Union College',
     website: 'www.union.edu',
     latitude: 42.817765,
-    longitude: -73.930548
+    longitude: -73.930548,
+    marker: ''
   },
   {
     name: '20N Broadway Tavern',
     website: 'No website',
     latitude: 42.815768,
-    longitude: -73.941403
+    longitude: -73.941403,
+    marker: ''
   },
   {
     name: 'Proctors Theater',
     website: 'www.proctors.org',
     latitude: 42.812557,
-    longitude: -73.941850
+    longitude: -73.941850,
+    marker: ''
   },
   {
     name: 'Cornells Restaurant',
     website: 'www.cornellsrestaurant.com',
     latitude: 42.817836,
-    longitude: -73.938326
+    longitude: -73.938326,
+    marker: ''
   },
   {
     name: 'Bow Tie Cinemas',
     website: 'bowtiecinemas.com',
     latitude: 42.812920,
-    longitude:  -73.942673
+    longitude:  -73.942673,
+    marker: ''
   },
   {
     name: 'Amtrak Train Station',
     website: 'amtrak.com',
     latitude: 42.814612,
-    longitude: -73.942893
+    longitude: -73.942893,
+    marker: ''
   }
 ];
 
@@ -62,8 +68,6 @@ var AppViewModel = function () {
 
   var self = this;
 
-  this.markerList = ko.observableArray([]);
-
   var mapOptions = {
     zoom: 14,
     center: {lat: 42.812634, lng: -73.925237},
@@ -77,11 +81,13 @@ var AppViewModel = function () {
   self.markerArray().forEach(function(placeItem) {
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(placeItem.latitude, placeItem.longitude),
-      map: map,
+      map: map, //null
       title: placeItem.name
     });
 
     placeItem.marker = marker;
+
+    //marker = null;
 
     var windowNames = placeItem.name
 
@@ -97,15 +103,22 @@ var AppViewModel = function () {
   });
 ///////////////////////////////////////////////////////////////////////
     self.initialMarkers= ko.observableArray(initialMarkers);
-    //self.placeItem = ko.observableArray('');
     self.query= ko.observable('');
 
-    self.filteredPlaces = ko.computed(function() {
+    self.filteredPlaces = ko.computed(function(placeItem) {
       var filter = self.query().toLowerCase();
       if (!filter) {
+        for (var i = 0; i < self.initialMarkers.length; i++){
+          self.initialMarkers[i].marker.setVisible(true);
+        }
         return self.initialMarkers();
       } else {
           return ko.utils.arrayFilter(self.initialMarkers(), function(placeItem) {
+              for (var a = 0; a < self.initialMarkers.length; a++) {
+                if (self.initialMarkers[a].name !== self.filteredPlaces()[i].name()) {
+                self.initialMarkers[a].marker.setVisible(false);
+                }
+            };
             return stringStartsWith(placeItem.name.toLowerCase(), filter);
           });
       }
@@ -113,21 +126,6 @@ var AppViewModel = function () {
 
 ///////////////////////////////////////////////////////////////////
 
-
-/*  var search= function(value) {
-    self.initialMarkers.removeAll();
-
-    for(var x in initialMarkers) {
-      if(initialMarkers[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        self.initialMarkers.push(initialMarkers[x]);
-      }
-    }
-  };
-
-  self.query.subscribe(initialMarkers.search);*/
-
-
-/////////////////////////////////////////////////////////////////
 
 };
 
