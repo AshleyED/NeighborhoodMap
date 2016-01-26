@@ -77,7 +77,7 @@ var AppViewModel = function () {
 
   var mapOptions = {
     zoom: 14,
-    center: {lat: 42.814113, lng: -73.939643}, 
+    center: {lat: 42.814113, lng: -73.939643},
   };
 
   map = new google.maps.Map(document.getElementById("map"),
@@ -122,18 +122,32 @@ var AppViewModel = function () {
     self.filteredPlaces = ko.computed(function(placeItem) {
       var filter = self.query().toLowerCase();
       if (!filter) {
-        for (var i = 0; i < self.initialMarkers.length; i++){
+        /*for (var i = 0; i < self.initialMarkers.length; i++){
           self.initialMarkers[i].marker.setVisible(true);
-        }
+        }*/
+        self.initialMarkers().forEach(function(placeItem) {
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(placeItem.latitude, placeItem.longitude),
+            map: map, //null
+            title: placeItem.name
+          });
+        })
         return self.initialMarkers();
       } else {
           return ko.utils.arrayFilter(self.initialMarkers(), function(placeItem) {
-              for (var a = 0; a < self.initialMarkers.length; a++) {
+              /*for (var a = 0; a < self.initialMarkers.length; a++) {
                 if (self.initialMarkers[a].name !== self.filteredPlaces()[i].name()) {
                 self.initialMarkers[a].marker.setVisible(false);
                 }
             };
-            return stringStartsWith(placeItem.name.toLowerCase(), filter);
+            return stringStartsWith(placeItem.name.toLowerCase(), filter);*/
+            is_filtered = stringStartsWith(placeItem.name.toLowerCase(), filter);
+             if (is_filtered === true) {
+               return self.initialMarkers().setVisible(true);
+             } else {
+               return self.initialMarkers().setVisible(false);
+             }
+             //return is_filtered
           });
       }
     }, self);
