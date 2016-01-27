@@ -116,40 +116,29 @@ var AppViewModel = function () {
     });
   });
 ///////////////////////////////////////////////////////////////////////
-    self.initialMarkers= ko.observableArray(initialMarkers);
+
     self.query= ko.observable('');
 
     self.filteredPlaces = ko.computed(function(placeItem) {
       var filter = self.query().toLowerCase();
       if (!filter) {
-        /*for (var i = 0; i < self.initialMarkers.length; i++){
-          self.initialMarkers[i].marker.setVisible(true);
-        }*/
-        self.initialMarkers().forEach(function(placeItem) {
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(placeItem.latitude, placeItem.longitude),
-            map: map, //null
-            title: placeItem.name
+        self.markerArray().forEach(function(placeItem) {
+            placeItem.marker.setVisible(true);
           });
-        })
-        return self.initialMarkers();
+        return self.markerArray();
       } else {
-          return ko.utils.arrayFilter(self.initialMarkers(), function(placeItem) {
-              /*for (var a = 0; a < self.initialMarkers.length; a++) {
-                if (self.initialMarkers[a].name !== self.filteredPlaces()[i].name()) {
-                self.initialMarkers[a].marker.setVisible(false);
-                }
-            };
-            return stringStartsWith(placeItem.name.toLowerCase(), filter);*/
+          return ko.utils.arrayFilter(self.markerArray(), function(placeItem) {
             is_filtered = stringStartsWith(placeItem.name.toLowerCase(), filter);
-             if (is_filtered === true) {
-               return self.initialMarkers().setVisible(true);
-             } else {
-               return self.initialMarkers().setVisible(false);
-             }
-             //return is_filtered
+             if (is_filtered) {
+                placeItem.marker.setVisible(true);
+                return is_filtered
+              }
+             else {
+                placeItem.marker.setVisible(false);
+                return is_filtered
+              }
           });
-      }
+        }
     }, self);
 
 ///////////////////////////////////////////////////////////////////
