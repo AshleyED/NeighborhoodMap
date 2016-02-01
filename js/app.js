@@ -108,6 +108,7 @@ var AppViewModel = function () {
         placeItem.marker.setAnimation(null);
       } else {
         placeItem.marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){ placeItem.marker.setAnimation(null); }, 2100);
       }
     }
 
