@@ -94,13 +94,22 @@ var AppViewModel = function () {
   self.markerArray().forEach(function(placeItem) {
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(placeItem.latitude, placeItem.longitude),
-      map: map, //null
-      title: placeItem.name
+      map: map,
+      title: placeItem.name,
+      animation: google.maps.Animation.DROP
     });
 
     placeItem.marker = marker;
 
-    //marker = null;
+    placeItem.marker.addListener('click', toggleBounce);
+
+    function toggleBounce() {
+      if (placeItem.marker.getAnimation() !== null) {
+        placeItem.marker.setAnimation(null);
+      } else {
+        placeItem.marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+    }
 
     var windowNames = placeItem.name
     var windowAddresses = placeItem.address
