@@ -126,30 +126,34 @@ var AppViewModel = function () {
     });
   });
 ///////////////////////////////////////////////////////////////////////
+  self.markerTrigger = function(marker) {
+        google.maps.event.trigger(this.marker, 'click');
+  };
 
-    self.query= ko.observable('');
+  self.query= ko.observable('');
 
-    self.filteredPlaces = ko.computed(function(placeItem) {
-      var filter = self.query().toLowerCase();
-      if (!filter) {
-        self.markerArray().forEach(function(placeItem) {
-            placeItem.marker.setVisible(true);
-          });
-        return self.markerArray();
-      } else {
-          return ko.utils.arrayFilter(self.markerArray(), function(placeItem) {
-            is_filtered = stringStartsWith(placeItem.name.toLowerCase(), filter);
-             if (is_filtered) {
-                placeItem.marker.setVisible(true);
-                return is_filtered
-              }
-             else {
-                placeItem.marker.setVisible(false);
-                return is_filtered
-              }
-          });
-        }
-    }, self);
+  self.filteredPlaces = ko.computed(function(placeItem) {
+    var filter = self.query().toLowerCase();
+    if (!filter) {
+      self.markerArray().forEach(function(placeItem) {
+          placeItem.marker.setVisible(true);
+        });
+      return self.markerArray();
+    } else {
+        return ko.utils.arrayFilter(self.markerArray(), function(placeItem) {
+          is_filtered = stringStartsWith(placeItem.name.toLowerCase(), filter);
+           if (is_filtered) {
+              placeItem.marker.setVisible(true);
+              console.log("clicked");
+              return is_filtered
+            }
+           else {
+              placeItem.marker.setVisible(false);
+              return is_filtered
+            }
+        });
+      }
+  }, self);
 
 ///////////////////////////////////////////////////////////////////
 

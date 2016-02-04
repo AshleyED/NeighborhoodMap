@@ -16,5 +16,9 @@ html, body {
 }
 
 #list-view {
-height: 125px; 
+height: 125px;
+}
+
+#listItems {
+  cursor: pointer;
 }
