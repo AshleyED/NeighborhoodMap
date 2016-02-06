@@ -24,8 +24,12 @@
     <div id="map"></div>
   </body>
   <script src="js/knockout-3.4.0.js"></script>
-
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&"
+  <script>
+    function googleError() {
+      alert("Sorry, Google map failed to load...");
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&" onerror="googleError()"
   asynch></script> <!--callback=initMap-->
   <script src="js/app.js"></script>
 </html>
