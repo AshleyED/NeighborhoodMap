@@ -18,7 +18,7 @@ var initialMarkers = [
     marker: ''
   },
   {
-    name: 'Proctors Theater',
+    name: 'Proctors',
     address: '432 State St, Schenectady, NY 12305',
     website: 'www.proctors.org',
     latitude: 42.812557,
@@ -124,8 +124,33 @@ var AppViewModel = function () {
       infoWindow.setContent(contentString);
       infoWindow.open(map, this);
     });
+
+    ///////////////////////////////////////////////////////////////////
+
+      var loadData = (function(placeItem){
+        var $wikiElem = $('#wikipedia-links');
+        $wikiElem.text("");
+        var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + placeItem.name + 'format=json&callback=wikiCallback';
+        $.ajax ({
+          url: wikiUrl,
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function ( response ){
+            var articleList = response[1];
+            for (var i=0; i<articleList.length; i++) {
+              articleStr = articleList[i];
+              var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+              $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+            };
+            var wikiRequestTimeout = setTimeout(function() {
+              $wikiElem.text("Failed to get Wikipedia response");
+            }, 8000);
+          }
+        });
+      }, self);
+    ///////////////////////////////////////////////////////////////////////
   });
-///////////////////////////////////////////////////////////////////////
+
   self.markerTrigger = function(marker) {
         google.maps.event.trigger(this.marker, 'click');
   };
@@ -154,10 +179,6 @@ var AppViewModel = function () {
         });
       }
   }, self);
-
-///////////////////////////////////////////////////////////////////
-
-
 };
 
 ko.applyBindings(new AppViewModel());
