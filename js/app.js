@@ -117,37 +117,37 @@ var AppViewModel = function () {
 
     infoWindow = new google.maps.InfoWindow();
 
-
-
     google.maps.event.addListener(placeItem.marker, 'click', function() {
       ///////////////////////////////////////////////////////////////////
-
-
-          var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + placeItem.name + 'format=json&callback=wikiCallback';
+          var contentString;
+          var alteredName = encodeURI(placeItem.name);
+          var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + alteredName + '&format=json&callback=wikiCallback';
+          self.wikiArray = ko.observableArray();
 
           $.ajax ({
             url: wikiUrl,
             dataType: "jsonp",
             success: function ( response ){
               var articleList = response[1];
-              if (articleList > 0) {
+              if (articleList.length > 0) {
                 for (var i=0; i<articleList.length; i++) {
                   articleStr = articleList[i];
                   var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                  placeItem.marker.push('<li><a href="' + url + '">' + articleStr + '</a></li>');
+                  contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + url + '</p>' + '</div>'
+                  self.wikiArray.push(contentString);
                 };
-
+                console.log(wikiUrl);
               } else {
-                placeItem.marker.push('<p>No articles</p>');
+                contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'No articles'+ '</p>' + '</div>'
+                self.wikiArray.push(contentString);
+                console.log(wikiUrl);
               }
-              var wikiRequestTimeout = setTimeout(function() {
-                placeItem.marker.push("Failed to get Wikipedia response");
-              }, 8000);
             }
+          }).error(function(e){
+            self.wikiArray.text("Failed to get Wikipedia response");
           });
 
       ///////////////////////////////////////////////////////////////////////
-      var contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '</div>'
 
       console.log("clicked");
       infoWindow.setContent(contentString);
