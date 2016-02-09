@@ -121,36 +121,41 @@ var AppViewModel = function () {
       ///////////////////////////////////////////////////////////////////
           var contentString;
           var alteredName = encodeURI(placeItem.name);
+
           var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + alteredName + '&format=json&callback=wikiCallback';
-          self.wikiArray = ko.observableArray();
+
+          //self.wikiArray = ko.observableArray();
 
           $.ajax ({
             url: wikiUrl,
             dataType: "jsonp",
             success: function ( response ){
               var articleList = response[1];
-              if (articleList.length > 0) {
+              if (articleList.length > 0) { //cannot read property length of undefined error if wikiUrl altered
                 for (var i=0; i<articleList.length; i++) {
                   articleStr = articleList[i];
                   var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                   contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + url + '</p>' + '</div>'
-                  self.wikiArray.push(contentString);
+                  //self.wikiArray.push(contentString);
+                  infoWindow.setContent(contentString);
                 };
                 console.log(wikiUrl);
               } else {
                 contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'No articles'+ '</p>' + '</div>'
-                self.wikiArray.push(contentString);
+              //  self.wikiArray.push(contentString);
                 console.log(wikiUrl);
+                infoWindow.setContent(contentString);
               }
             }
           }).error(function(e){
-            self.wikiArray.text("Failed to get Wikipedia response");
+            contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'Failed to reach Wikipedia'+ '</p>' + '</div>'
+            infoWindow.setContent(contentString);
           });
 
       ///////////////////////////////////////////////////////////////////////
 
       console.log("clicked");
-      infoWindow.setContent(contentString);
+      //infoWindow.setContent(contentString);
       infoWindow.open(map, this);
     });
   });
