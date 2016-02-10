@@ -64,6 +64,8 @@ var map;
 var infoWindow;
 var marker;
 
+//Create callback function for Google map async load
+function initMap () {
 //Create View Model main function
 var AppViewModel = function () {
 
@@ -208,11 +210,11 @@ var AppViewModel = function () {
         });
       }
   }, self);
-
 };
 
 //Call the AppViewModel function
 ko.applyBindings(new AppViewModel());
+};
 
 ////**References**////
 //Using "this" instead of "self" with markers: http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/
