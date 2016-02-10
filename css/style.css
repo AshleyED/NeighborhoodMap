@@ -4,21 +4,24 @@ html, body {
   padding: 0;
 }
 
+/*Create size and position of map*/
 #map {
   height: 100%;
   position: relative;
   overflow: hidden;
 }
 
+/*Create static div for filter list to prevent resizing when list shortens*/
 #filter {
   padding-top: 25px;
-
 }
 
+/*Create static div for filter list to prevent resizing when list shortens*/
 #list-view {
-height: 125px;
+  height: 125px;
 }
 
+/*Change cursor to show list is active and can be clicked*/
 #listItems {
   cursor: pointer;
 }

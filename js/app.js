@@ -1,5 +1,6 @@
-//Model Data
+////**Model Data**////
 
+//Identify place information in an array
 var initialMarkers = [
   {
     name: 'Union College',
@@ -37,7 +38,7 @@ var initialMarkers = [
     marker: ''
   },
   {
-    name: 'Amtrak Train Station',
+    name: 'Amtrak',
     address: '332 Erie Blvd, Schenectady, NY 12305',
     website: 'amtrak.com',
     latitude: 42.814612,
@@ -46,6 +47,7 @@ var initialMarkers = [
   }
 ];
 
+//Construct Place data using ko.observable so data is updated in real time when changed
 var Place = function (data) {
   this.name = ko.observable(data.name);
   this.address = ko.observable(data.address);
@@ -55,37 +57,48 @@ var Place = function (data) {
   this.marker = '';
 };
 
-//View Model
+////**View Model**////
+
+//Create global variables for use in map functions
 var map;
 var infoWindow;
 var marker;
 
+//Create View Model main function
 var AppViewModel = function () {
+
+  //Function to assist with filteredPlaces list by checking the beginning of string searched
   var stringStartsWith = function (string, startsWith) {
     string = string || "";
-    if (startsWith.length > string.length)
+    if (startsWith.length > string.length) {
         return false;
+    }
     return string.substring(0, startsWith.length) === startsWith;
   };
 
+  //Variable to keep references of "this" inside the View Model
   var self = this;
 
+  //Create map centered on Schenectady, NY
   var mapOptions = {
-    zoom: 14,
-    center: {lat: 42.814113, lng: -73.939643},
+    zoom: 15,
+    center: {lat: 42.814113, lng: -73.939643}
   };
 
   map = new google.maps.Map(document.getElementById("map"),
       mapOptions);
 
+  //Create event listener to cause map to resize and remain centered in response to a window resize
   google.maps.event.addDomListener(window, "resize", function() {
 			var center = map.getCenter();
 			google.maps.event.trigger(map, "resize");
 			map.setCenter(center);
   });
 
+  //Create observable array for markers
   self.markerArray = ko.observableArray(initialMarkers);
 
+  //Create markers that populate on the map and correspond to the locations identified in the initialMarkers array
   self.markerArray().forEach(function(placeItem) {
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(placeItem.latitude, placeItem.longitude),
@@ -96,6 +109,7 @@ var AppViewModel = function () {
 
     placeItem.marker = marker;
 
+    //Add bounce animation to markers when clicked or selected from list
     placeItem.marker.addListener('click', toggleBounce);
 
     function toggleBounce() {
@@ -107,24 +121,31 @@ var AppViewModel = function () {
       }
     }
 
-    var windowNames = placeItem.name
-    var windowAddresses = placeItem.address
-    var windowUrls = placeItem.website
+    //Create variables for use in contentString for infowindows
+    var windowNames = placeItem.name;
+    var windowAddresses = placeItem.address;
 
+    //Create new infowindow
     infoWindow = new google.maps.InfoWindow();
 
+    //Create event listener to open infowindow when marker is clicked
     google.maps.event.addListener(placeItem.marker, 'click', function() {
-
+          //Create contentString variable for infowindows
           var contentString;
+
+          //Alter placeItem.name content to account for symbols and spaces
           var alteredName = encodeURI(placeItem.name);
 
+          //Wikipedia API request URL
           var wikiUrl = "http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + alteredName + "&limit=1&redirects=return&format=json"
 
+          //AJAX request for Wikipedia API information used in infowindows
           $.ajax ({
             url: wikiUrl,
             dataType: "jsonp",
             success: function ( response ){
               var articleList = response[1];
+              //If an article is found, populate infowindow with content string information showing Wikipedia response
               if (articleList.length > 0) {
                 for (var i=0; i<articleList.length; i++) {
                   articleStr = articleList[i];
@@ -132,45 +153,54 @@ var AppViewModel = function () {
                   contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + response + '</p>' + '<a href=" ' + url + '">' + url + '</a>' + '</div>'
                   infoWindow.setContent(contentString);
                   console.log(response);
-                };
+                }
                 console.log(wikiUrl);
+              //If no article is found, populate infowindow with content string reflecting no articles were found
               } else {
-                contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'No articles'+ '</p>' + '</div>'
+                contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'No articles found on Wikipedia'+ '</p>' + '</div>'
                 console.log(wikiUrl);
                 infoWindow.setContent(contentString);
               }
             }
+          //Communicate error when Wikipedia API is unable to be reached or is not available
           }).error(function(e){
             contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'Failed to reach Wikipedia'+ '</p>' + '</div>'
             infoWindow.setContent(contentString);
           });
-
+      //Call to open the infowindow
       console.log("clicked");
       infoWindow.open(map, this);
     });
   });
 
+  //Function to connect marker triggers to list selection, allows markers to animate and infowindows to open when list is clicked
   self.markerTrigger = function(marker) {
         google.maps.event.trigger(this.marker, 'click');
   };
 
+  //Create observable for information typed into the search bar
   self.query= ko.observable('');
 
+  //Create a ko.computed for the filtering of the list and the markers
   self.filteredPlaces = ko.computed(function(placeItem) {
     var filter = self.query().toLowerCase();
+    //If there is nothing in the filter, return the full list and all markers are visible
     if (!filter) {
       self.markerArray().forEach(function(placeItem) {
           placeItem.marker.setVisible(true);
         });
       return self.markerArray();
+    //If a search is entered, compare search data to place names and show only list items and markers that match the search value
     } else {
         return ko.utils.arrayFilter(self.markerArray(), function(placeItem) {
           is_filtered = stringStartsWith(placeItem.name.toLowerCase(), filter);
+          //Show markers that match the search value and return list items that match the search value
            if (is_filtered) {
               placeItem.marker.setVisible(true);
               console.log("clicked");
               return is_filtered
             }
+          //Hide markers that do not match the search value
            else {
               placeItem.marker.setVisible(false);
               return is_filtered
@@ -181,12 +211,12 @@ var AppViewModel = function () {
 
 };
 
+//Call the AppViewModel function
 ko.applyBindings(new AppViewModel());
 
-//https://developers.google.com/maps/documentation/javascript/reference referenced for map code
-//https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple info window one
-//http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/ infowindow marker to this
-//http://opensoul.org/2011/06/23/live-search-with-knockoutjs/ list and filter list
-//http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html filter list
-//http://stackoverflow.com/questions/28042344/filter-using-knockoutjs stringStartsWith
-//http://codepen.io/hubpork/pen/xriIz resize map
+////**References**////
+//Using "this" instead of "self" with markers: http://you.arenot.me/2010/06/29/google-maps-api-v3-0-multiple-markers-multiple-infowindows/
+//Assisted with creation of list and list filter:http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+//Assisted with creation of list filter: http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+//stringStartsWith function for ko filter: http://stackoverflow.com/questions/28042344/filter-using-knockoutjs
+//Function use to resize map in response to window resize: http://codepen.io/hubpork/pen/xriIz

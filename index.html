@@ -12,28 +12,29 @@
   </head>
   <body>
     <div id = "filter">
-        <input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+      <!--Bind list to query search-->
+      <input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
     </div>
+    <!--Bind list to query search results to show only results matching query search-->
     <ul id="list-view" data-bind="template: {initialMarkers:'name', foreach:filteredPlaces}, value: self.filteredPlaces">
-
-        <li>
-          <a id="listItems"><strong data-bind="text:name, click: $root.markerTrigger"></strong></a>
-        </li>
-
+      <li>
+        <!--Bind list items to placeItem names to populate list items and connects list selection to marker triggers-->
+        <a id="listItems"><strong data-bind="text:name, click: $root.markerTrigger"></strong></a>
+      </li>
     </ul>
-
     <div id="map">
     </div>
-  </body>
+
   <script src="js/knockout-3.4.0.js"></script>
+  <!--Google map error function to show when map cannot be loaded-->
   <script>
     function googleError() {
       alert("Sorry, Google map failed to load...");
     }
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&" onerror="googleError()"
-  asynch></script> <!--callback=initMap-->
+  <!--Google map API key-->
+  <script asynch src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYTqavAonxsJTIBRyN4OgospkGPetfGfM&" onerror="googleError()"
+  ></script>
   <script src="js/app.js"></script>
+  </body>
 </html>
-
-<!-- google map loading reference: https://developers.google.com/maps/documentation/javascript/examples/map-simple visible: shouldShowMessage-->
