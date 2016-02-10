@@ -10,24 +10,24 @@ var initialMarkers = [
     marker: ''
   },
   {
-    name: '20N Broadway Tavern',
-    address: '20 Broadway Schenectady, NY 12305',
-    latitude: 42.815768,
-    longitude: -73.941403,
+    name: 'Schenectady County Community College',
+    address: '78 Washington Avenue, Schenectady, NY 12305',
+    latitude: 42.815087,
+    longitude: -73.953974,
     marker: ''
   },
   {
-    name: 'Proctors',
-    address: '432 State St, Schenectady, NY 12305',
-    latitude: 42.812557,
-    longitude: -73.941850,
+    name: 'General Electric',
+    address: '1 River Road, Schenectady, NY 12345',
+    latitude: 42.810269,
+    longitude: -73.953759,
     marker: ''
   },
   {
-    name: 'Cornells Restaurant',
-    address: '39 N Jay St, Schenectady, NY 12305',
-    latitude: 42.817836,
-    longitude: -73.938326,
+    name: 'First Reformed Church of Schenectady',
+    address: '8 North Church Street, Schenectady, NY 12305',
+    latitude: 42.817104,
+    longitude: -73.947059,
     marker: ''
   },
   {
@@ -150,7 +150,7 @@ var AppViewModel = function () {
                 for (var i=0; i<articleList.length; i++) {
                   articleStr = articleList[i];
                   var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                  contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + response + '</p>' + '<a href=" ' + url + '">' + url + '</a>' + '</div>'
+                  contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + response[2] + '</p>' + '<a href=" ' + url + '">' + url + '</a>' + '</div>'
                   infoWindow.setContent(contentString);
                   console.log(response);
                 }
