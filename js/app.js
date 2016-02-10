@@ -4,7 +4,6 @@ var initialMarkers = [
   {
     name: 'Union College',
     address: '807 Union St, Schenectady, NY 12308',
-    website: 'www.union.edu',
     latitude: 42.817765,
     longitude: -73.930548,
     marker: ''
@@ -12,7 +11,6 @@ var initialMarkers = [
   {
     name: '20N Broadway Tavern',
     address: '20 Broadway Schenectady, NY 12305',
-    website: 'No website',
     latitude: 42.815768,
     longitude: -73.941403,
     marker: ''
@@ -20,7 +18,6 @@ var initialMarkers = [
   {
     name: 'Proctors',
     address: '432 State St, Schenectady, NY 12305',
-    website: 'www.proctors.org',
     latitude: 42.812557,
     longitude: -73.941850,
     marker: ''
@@ -28,7 +25,6 @@ var initialMarkers = [
   {
     name: 'Cornells Restaurant',
     address: '39 N Jay St, Schenectady, NY 12305',
-    website: 'www.cornellsrestaurant.com',
     latitude: 42.817836,
     longitude: -73.938326,
     marker: ''
@@ -36,7 +32,6 @@ var initialMarkers = [
   {
     name: 'Bow Tie Cinemas',
     address: '400 State St, Schenectady, NY 12305',
-    website: 'bowtiecinemas.com',
     latitude: 42.812920,
     longitude:  -73.942673,
     marker: ''
@@ -114,35 +109,33 @@ var AppViewModel = function () {
 
     var windowNames = placeItem.name
     var windowAddresses = placeItem.address
+    var windowUrls = placeItem.website
 
     infoWindow = new google.maps.InfoWindow();
 
     google.maps.event.addListener(placeItem.marker, 'click', function() {
-      ///////////////////////////////////////////////////////////////////
+
           var contentString;
           var alteredName = encodeURI(placeItem.name);
 
-          var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + alteredName + '&format=json&callback=wikiCallback';
-
-          //self.wikiArray = ko.observableArray();
+          var wikiUrl = "http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + alteredName + "&limit=1&redirects=return&format=json"
 
           $.ajax ({
             url: wikiUrl,
             dataType: "jsonp",
             success: function ( response ){
               var articleList = response[1];
-              if (articleList.length > 0) { //cannot read property length of undefined error if wikiUrl altered
+              if (articleList.length > 0) {
                 for (var i=0; i<articleList.length; i++) {
                   articleStr = articleList[i];
                   var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                  contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + url + '</p>' + '</div>'
-                  //self.wikiArray.push(contentString);
+                  contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + response + '</p>' + '<a href=" ' + url + '">' + url + '</a>' + '</div>'
                   infoWindow.setContent(contentString);
+                  console.log(response);
                 };
                 console.log(wikiUrl);
               } else {
                 contentString = '<div id="content">' + windowNames + '<p>' + windowAddresses + '</p>' + '<p>' + 'No articles'+ '</p>' + '</div>'
-              //  self.wikiArray.push(contentString);
                 console.log(wikiUrl);
                 infoWindow.setContent(contentString);
               }
@@ -152,10 +145,7 @@ var AppViewModel = function () {
             infoWindow.setContent(contentString);
           });
 
-      ///////////////////////////////////////////////////////////////////////
-
       console.log("clicked");
-      //infoWindow.setContent(contentString);
       infoWindow.open(map, this);
     });
   });
